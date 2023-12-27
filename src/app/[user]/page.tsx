@@ -22,7 +22,7 @@ const DashboardPage = async ({
   const countSpace = await getAllUserCountSpaces()
 
   if (!countSpace.success) return <div>Failing fetching your Count Spaces</div>;
-  console.log(countSpace.result)
+  // console.log(countSpace.result)
 
   return (
     <main>

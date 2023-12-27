@@ -38,6 +38,53 @@ export const createNewCountSpace = async (name: string) => {
   });
 };
 
+export const getOneCountSpace = async ({
+  countSpaceName,
+  ownerName,
+}: {
+  countSpaceName: string;
+  ownerName: string;
+}) => {
+  return await queryWrapper(async () => {
+    const countSpace = await prisma.countSpace.findUnique({
+      where: {
+        ownerName_name: {
+          ownerName,
+          name: countSpaceName,
+        },
+      },
+      include: {
+        items: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+    if (!countSpace) throw new Error("CountSpace not found");
+    // TODO: Check if the user logged is owner or guest of the countSpace
+
+    interface ItemAggregate {
+      [key: string]: number;
+    }
+
+    const categoryGroup: ItemAggregate = countSpace.items.reduce(
+      (acc, item) => {
+        const { name, current } = item;
+        if (acc.hasOwnProperty(name)) {
+          acc[name] += current;
+        } else {
+          acc[name] = current;
+        }
+        return acc;
+      },
+      {} as ItemAggregate
+    );
+
+    return { countSpace, categoryGroup };
+  });
+};
+
 export const addUserAsGuestInExistingCountSpace = async ({
   guestName,
   countSpaceId,
@@ -82,7 +129,6 @@ export const addNewCountSpaceItem = async ({
         unit,
       },
     });
-    console.log({ newCountSpaceItem });
     return newCountSpaceItem;
   });
 };
