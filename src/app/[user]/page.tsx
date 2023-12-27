@@ -1,4 +1,4 @@
-import { addNewCountSpaceItem, addUserAsGuestInExistingCountSpace, getAllUserCountSpaces } from "@/server/actions/countSpace";
+import { getAllUserCountSpaces } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
 
@@ -19,7 +19,7 @@ const DashboardPage = async ({
   } = data;
 
   if (name !== user) return <div>Go back home page</div>;
-  const countSpace = await getAllUserCountSpaces()
+  const countSpace = await getAllUserCountSpaces();
 
   if (!countSpace.success) return <div>Failing fetching your Count Spaces</div>;
   // console.log(countSpace.result)

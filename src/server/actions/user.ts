@@ -33,24 +33,24 @@ export const checkUserNameExists = async ({ username }: OnlyUsername) => {
   });
 };
 
-// export const postNewUserNameHardCoded = async ({
-//   username,
-//   email,
-// }: {
-//   username: string;
-//   email: string;
-// }) => {
-//   return await queryWrapper(async () => {
-//     const user = await prisma.user.create({
-//       data: {
-//         name: username,
-//         email,
-//       },
-//     });
-//     if (user === null) throw new Error("Error inserting new username");
-//     return null;
-//   });
-// };
+export const postNewUserNameHardCoded = async ({
+  username,
+  email,
+}: {
+  username: string;
+  email: string;
+}) => {
+  return await queryWrapper(async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: username,
+        email,
+      },
+    });
+    if (user === null) throw new Error("Error inserting new username");
+    return null;
+  });
+};
 
 export const postNewUserName = async ({ username }: OnlyUsername) => {
   const { email } = await userSanitizer();

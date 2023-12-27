@@ -18,28 +18,39 @@ model User {
 }
 
 model CountSpace {
-  id        Int                   @id @default(autoincrement())
-  name      String
-  createdAt DateTime              @default(now())
-  owner     User                  @relation(fields: [ownerName], references: [name])
-  ownerName String
-  guests    UserCountSpaceGuest[]
-  items     CountSpaceItem[]
+  id         Int                   @id @default(autoincrement())
+  name       String
+  createdAt  DateTime              @default(now())
+  owner      User                  @relation(fields: [ownerName], references: [name])
+  ownerName  String
+  guests     UserCountSpaceGuest[]
+  categories CountSpaceCategory[]
 
   @@unique([ownerName, name])
 }
 
-model CountSpaceItem {
-  id           Int        @id @default(autoincrement())
+model CountSpaceCategory {
+  id           Int              @id @default(autoincrement())
   name         String
-  createdAt    DateTime   @default(now())
-  countSpace   CountSpace @relation(fields: [countSpaceId], references: [id])
+  createdAt    DateTime         @default(now())
+  countSpace   CountSpace       @relation(fields: [countSpaceId], references: [id])
   countSpaceId Int
-  current      Int        @default(0)
   budget       Int?
   unit         String?
+  items        CountSpaceItem[]
 
   @@unique([countSpaceId, name])
+}
+
+model CountSpaceItem {
+  id                   Int                @id @default(autoincrement())
+  name                 String
+  createdAt            DateTime           @default(now())
+  countSpace           CountSpaceCategory @relation(fields: [countSpaceCategoryId], references: [id])
+  countSpaceCategoryId Int
+  amount               Int
+
+  @@unique([countSpaceCategoryId, name])
 }
 
 model UserCountSpaceGuest {

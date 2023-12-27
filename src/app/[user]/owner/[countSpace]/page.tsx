@@ -1,5 +1,13 @@
-import { getOneCountSpace } from "@/server/actions/countSpace";
-import { getUserNameByEmail } from "@/server/actions/user";
+import {
+  createNewCountSpace,
+  getOneCountSpace,
+} from "@/server/actions/countSpace";
+import { addNewCountSpaceCategory } from "@/server/actions/countSpaceCategory";
+import {
+  deleteUserById,
+  getUserNameByEmail,
+  postNewUserNameHardCoded,
+} from "@/server/actions/user";
 import { getServerSession } from "next-auth";
 
 const CountSpacePage = async ({
@@ -28,8 +36,9 @@ const CountSpacePage = async ({
   });
 
   if (!countSpaceDetails.success) return <div>Error, try again</div>;
-  const { categoryGroup, countSpace: history } = countSpaceDetails.result;
-  console.log({categoryGroup, history});
+  const { name: countSpaceName, categories, id } = countSpaceDetails.result;
+  console.log({ countSpaceName, categories, id });
+
   return (
     <main>
       <h1>CountSpace Details</h1>
