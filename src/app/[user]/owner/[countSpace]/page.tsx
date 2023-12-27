@@ -1,8 +1,9 @@
-import TableHandler from "@/components/TableHandler";
 import { getOneCountSpace } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
-import CategoriesTable from "./CategoriesTable";
+
+import SummaryTable from "./SummaryTable";
+import HistoryTable from "./HistoryTable";
 
 const CountSpacePage = async ({
   params: { user, countSpace },
@@ -36,7 +37,8 @@ const CountSpacePage = async ({
   return (
     <main>
       <h1>CountSpace Details</h1>
-      <CategoriesTable categories={categories}/>
+      <SummaryTable categories={categories} />
+      <HistoryTable categories={categories} />
     </main>
   );
 };

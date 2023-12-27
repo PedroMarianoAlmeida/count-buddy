@@ -53,8 +53,16 @@ export const getOneCountSpace = async ({
         },
       },
       include: {
-        categories: true
-      }
+        categories: {
+          include: {
+            items: {
+              orderBy: {
+                createdAt: "desc",
+              },
+            },
+          },
+        },
+      },
     });
     if (!countSpace) throw new Error("CountSpace not found");
     return countSpace;
