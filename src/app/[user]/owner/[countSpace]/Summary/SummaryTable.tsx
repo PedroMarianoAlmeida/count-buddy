@@ -23,7 +23,7 @@ const SummaryTable = ({ categories }: CategoriesTableProps) => {
     budget: budget ?? "-",
     total: items.reduce((acc, { amount }) => acc + amount, 0),
     unit: unit ?? "-",
-    actions: <SummaryActions />,
+    actions: <SummaryActions category={name}/>,
   }));
 
   return (

@@ -2,7 +2,7 @@ import { getOneCountSpace } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
 
-import SummaryTable from "./SummaryTable";
+import SummaryTable from "./Summary/SummaryTable";
 import HistoryTable from "./HistoryTable";
 
 const CountSpacePage = async ({
@@ -31,8 +31,7 @@ const CountSpacePage = async ({
   });
 
   if (!countSpaceDetails.success) return <div>Error, try again</div>;
-  const { name: countSpaceName, categories, id } = countSpaceDetails.result;
-  console.log({ countSpaceName, categories, id });
+  const { categories } = countSpaceDetails.result;
 
   return (
     <main>
