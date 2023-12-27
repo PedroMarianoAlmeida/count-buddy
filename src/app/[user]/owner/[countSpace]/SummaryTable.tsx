@@ -1,5 +1,6 @@
 import TableHandler from "@/components/TableHandler";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
+import SummaryActions from "./SummaryActions";
 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
   items: CountSpaceItem[];
@@ -22,7 +23,7 @@ const SummaryTable = ({ categories }: CategoriesTableProps) => {
     budget: budget ?? "-",
     total: items.reduce((acc, { amount }) => acc + amount, 0),
     unit: unit ?? "-",
-    actions: "Add record",
+    actions: <SummaryActions />,
   }));
 
   return (

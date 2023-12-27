@@ -14,13 +14,20 @@ const HistoryTable = ({ categories }: CategoriesTableProps) => {
     { key: "category", value: "Category" },
     { key: "name", value: "Description" },
     { key: "amount", value: "Amount" },
+    { key: "createdAt", value: "Date" },
     { key: "actions", value: "Actions" },
   ];
   const tableRows = categories
     .map(({ name: category, items }) =>
-      items.map(({ name, amount }) => ({ category, name, amount, actions: "Edit" }))
+      items.map(({ name, amount, createdAt }) => ({
+        category,
+        name,
+        amount,
+        actions: "Edit",
+        createdAt: createdAt.toDateString(),
+      }))
     )
-    .flat();
+    .flat(); //TODO: Sort by date (because is group by name)
 
   return (
     <div>
