@@ -24,8 +24,22 @@ model CountSpace {
   owner     User                  @relation(fields: [ownerName], references: [name])
   ownerName String
   guests    UserCountSpaceGuest[]
+  items     CountSpaceItem[]
 
   @@unique([ownerName, name])
+}
+
+model CountSpaceItem {
+  id           Int        @id @default(autoincrement())
+  name         String
+  createdAt    DateTime   @default(now())
+  countSpace   CountSpace @relation(fields: [countSpaceId], references: [id])
+  countSpaceId Int
+  current      Int        @default(0)
+  budget       Int?
+  unit         String?
+
+  @@unique([countSpaceId, name])
 }
 
 model UserCountSpaceGuest {

@@ -1,4 +1,4 @@
-import { addUserAsGuestInExistingCountSpace, getAllUserCountSpaces } from "@/server/actions/countSpace";
+import { addNewCountSpaceItem, addUserAsGuestInExistingCountSpace, getAllUserCountSpaces } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
 

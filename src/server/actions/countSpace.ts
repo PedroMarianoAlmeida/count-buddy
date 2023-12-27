@@ -13,6 +13,7 @@ export const getAllUserCountSpaces = async () => {
   return await queryWrapper(async () => {
     const countSpaces = await prisma.countSpace.findMany({
       where: { owner: { name: userName } },
+      include: { items: true },
     });
 
     return countSpaces;
@@ -20,24 +21,6 @@ export const getAllUserCountSpaces = async () => {
 };
 
 export const createNewCountSpace = async (name: string) => {
-  const { userName } = await userSanitizer();
-  if (userName === null) {
-    throw new Error("userName is null");
-  }
-
-  return await queryWrapper(async () => {
-    const newCountSpace = await prisma.countSpace.create({
-      data: {
-        name,
-        owner: { connect: { name: userName } },
-      },
-    });
-
-    return newCountSpace;
-  });
-};
-
-export const createNewCountSpaceHardCoded = async (name: string) => {
   const { userName } = await userSanitizer();
   if (userName === null) {
     throw new Error("userName is null");
@@ -74,5 +57,32 @@ export const addUserAsGuestInExistingCountSpace = async ({
     });
 
     return newGuest;
+  });
+};
+
+export const addNewCountSpaceItem = async ({
+  countSpaceId,
+  name,
+  budget,
+  unit,
+}: {
+  countSpaceId: number;
+  name: string;
+  budget?: number;
+  unit?: string;
+}) => {
+  // TODO: Validate if the user logged is a owner or a guest of the countSpace
+
+  return await queryWrapper(async () => {
+    const newCountSpaceItem = await prisma.countSpaceItem.create({
+      data: {
+        countSpace: { connect: { id: countSpaceId } },
+        name,
+        budget,
+        unit,
+      },
+    });
+    console.log({ newCountSpaceItem });
+    return newCountSpaceItem;
   });
 };
