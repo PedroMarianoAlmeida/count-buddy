@@ -1,14 +1,8 @@
-import {
-  createNewCountSpace,
-  getOneCountSpace,
-} from "@/server/actions/countSpace";
-import { addNewCountSpaceCategory } from "@/server/actions/countSpaceCategory";
-import {
-  deleteUserById,
-  getUserNameByEmail,
-  postNewUserNameHardCoded,
-} from "@/server/actions/user";
+import TableHandler from "@/components/TableHandler";
+import { getOneCountSpace } from "@/server/actions/countSpace";
+import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
+import CategoriesTable from "./CategoriesTable";
 
 const CountSpacePage = async ({
   params: { user, countSpace },
@@ -42,6 +36,7 @@ const CountSpacePage = async ({
   return (
     <main>
       <h1>CountSpace Details</h1>
+      <CategoriesTable categories={categories}/>
     </main>
   );
 };
