@@ -31,12 +31,12 @@ const CountSpacePage = async ({
   });
 
   if (!countSpaceDetails.success) return <div>Error, try again</div>;
-  const { categories } = countSpaceDetails.result;
+  const { categories, id } = countSpaceDetails.result;
 
   return (
     <main>
       <h1>CountSpace Details</h1>
-      <SummaryTable categories={categories} />
+      <SummaryTable categories={categories} countSpaceId={id}/>
       <HistoryTable categories={categories} />
     </main>
   );

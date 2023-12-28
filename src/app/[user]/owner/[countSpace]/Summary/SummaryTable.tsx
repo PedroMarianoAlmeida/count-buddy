@@ -1,6 +1,7 @@
 import TableHandler from "@/components/TableHandler";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
 import SummaryActions from "./SummaryActions";
+import { NewCategory } from "./NewCategory";
 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
   items: CountSpaceItem[];
@@ -8,9 +9,10 @@ interface ExtendedCountSpaceCategory extends CountSpaceCategory {
 
 interface CategoriesTableProps {
   categories: ExtendedCountSpaceCategory[];
+  countSpaceId: number;
 }
 
-const SummaryTable = ({ categories }: CategoriesTableProps) => {
+const SummaryTable = ({ categories, countSpaceId }: CategoriesTableProps) => {
   const tableHeader = [
     { key: "name", value: "Name" },
     { key: "budget", value: "Budget" },
@@ -28,7 +30,11 @@ const SummaryTable = ({ categories }: CategoriesTableProps) => {
 
   return (
     <div>
-      <h2>Summary</h2>
+      <div className="flex gap-3 items-center">
+        <h2>Summary</h2>
+        <NewCategory countSpaceId={countSpaceId} />
+      </div>
+
       <TableHandler columnHeaders={tableHeader} rows={tableRows} />
     </div>
   );
