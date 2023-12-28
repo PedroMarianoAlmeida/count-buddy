@@ -27,7 +27,7 @@ const TableHandler = ({ columnHeaders, rows, caption }: TableProps<string>) => {
       <TableHeader>
         <TableRow>
           {columnHeaders.map((header) => (
-            <TableHead className={header.headerExtraClasses}>
+            <TableHead className={header.headerExtraClasses} key={header.key}>
               {header.value}
             </TableHead>
           ))}
