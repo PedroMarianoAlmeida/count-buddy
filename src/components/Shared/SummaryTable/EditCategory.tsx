@@ -7,6 +7,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,25 +30,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { isLoading } from "@/utils/formHelpers";
-import { addNewCountSpaceCategory } from "@/server/actions/countSpaceCategory";
-import { category } from "@/utils/formValidation";
 
-export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
+import { isLoading } from "@/utils/formHelpers";
+import { category } from "@/utils/formValidation";
+import { updateCountSpaceCategory } from "@/server/actions/countSpaceCategory";
+
+export function EditCategory({
+  category: categoryName,
+  countSpaceCategoryId,
+  budget,
+  unit,
+}: {
+  category: string;
+  countSpaceCategoryId: number;
+  budget: number | null;
+  unit: string | null;
+}) {
   const router = useRouter();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
-
   const form = useForm<z.infer<typeof category>>({
     resolver: zodResolver(category),
     defaultValues: {
-      name: "",
-      budget: 0,
-      unit: "",
+      budget: budget ?? 0,
+      unit: unit ?? "",
+      name: categoryName,
     },
   });
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
-    mutationFn: addNewCountSpaceCategory,
+    mutationFn: updateCountSpaceCategory,
     onSuccess: () => {
       form.reset();
       router.refresh();
@@ -55,20 +68,23 @@ export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
     },
   });
   function onSubmit(values: z.infer<typeof category>) {
-    const { name, budget, unit } = values;
-    console.log({ name, budget, unit });
-    mutateAsync({ name, budget, unit, countSpaceId });
+    const { budget, unit, name } = values;
+    mutateAsync({ budget, unit, name, countSpaceCategoryId });
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">New Category</Button>
+        <Button variant="outline">
+          <FontAwesomeIcon icon={faPenToSquare} />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>New Category</DialogTitle>
-          <DialogDescription>Add new category</DialogDescription>
+          <DialogTitle>Edit </DialogTitle>
+          <DialogDescription>
+            Create a new record for {categoryName}
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -111,10 +127,9 @@ export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
                 </FormItem>
               )}
             />
-
             <DialogFooter>
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
-                Add category
+                Edit category
               </Button>
               <DialogClose asChild>
                 <Button type="button" variant="secondary" ref={cancelButtonRef}>

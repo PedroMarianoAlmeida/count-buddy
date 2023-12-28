@@ -25,3 +25,7 @@ export const addNewCountSpaceItem = async ({
     return newCountSpaceItem;
   });
 };
+
+export const updateCountSpaceItem = async ({
+  
+}) => {};

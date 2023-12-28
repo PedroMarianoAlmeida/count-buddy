@@ -2,6 +2,8 @@ import TableHandler from "@/components/TableHandler";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
 import SummaryActions from "./SummaryActions";
 import { NewCategory } from "./NewCategory";
+import { Edit } from "lucide-react";
+import { EditCategory } from "./EditCategory";
 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
   items: CountSpaceItem[];
@@ -25,7 +27,14 @@ const SummaryTable = ({ categories, countSpaceId }: CategoriesTableProps) => {
     budget: budget ?? "-",
     total: items.reduce((acc, { amount }) => acc + amount, 0),
     unit: unit ?? "-",
-    actions: <SummaryActions category={name} countSpaceCategoryId={id} />,
+    actions: (
+      <SummaryActions
+        category={name}
+        countSpaceCategoryId={id}
+        budget={budget}
+        unit={unit}
+      />
+    ),
   }));
 
   return (

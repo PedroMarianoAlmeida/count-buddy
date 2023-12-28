@@ -28,3 +28,27 @@ export const addNewCountSpaceCategory = async ({
     return newCountSpaceItem;
   });
 };
+
+export const updateCountSpaceCategory = async ({
+  countSpaceCategoryId,
+  name,
+  budget,
+  unit,
+}: {
+  countSpaceCategoryId: number;
+  name: string;
+  budget?: number;
+  unit?: string;
+}) => {
+  return await queryWrapper(async () => {
+    const updatedCountSpaceItem = await prisma.countSpaceCategory.update({
+      where: { id: countSpaceCategoryId },
+      data: {
+        name,
+        budget,
+        unit,
+      },
+    });
+    return updatedCountSpaceItem;
+  });
+};
