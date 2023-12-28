@@ -1,5 +1,5 @@
-import HistoryTable from "@/app/[user]/owner/[countSpace]/HistoryTable";
-import SummaryTable from "@/app/[user]/owner/[countSpace]/Summary/SummaryTable";
+import HistoryTable from "@/components/Shared/HistoryTable";
+import SummaryTable from "@/components/Shared/SummaryTable";
 import { getOneCountSpace } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";

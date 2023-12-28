@@ -2,8 +2,8 @@ import { getOneCountSpace } from "@/server/actions/countSpace";
 import { getUserNameByEmail } from "@/server/actions/user";
 import { getServerSession } from "next-auth";
 
-import SummaryTable from "./Summary/SummaryTable";
-import HistoryTable from "./HistoryTable";
+import SummaryTable from "@/components/Shared/SummaryTable";
+import HistoryTable from "@/components/Shared/HistoryTable";
 
 const CountSpacePage = async ({
   params: { user, countSpace },
