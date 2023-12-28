@@ -1,5 +1,7 @@
 "use client";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -8,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -42,6 +45,9 @@ export function AddRecord({
   category: string;
   countSpaceCategoryId: number;
 }) {
+  const router = useRouter();
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,17 +56,19 @@ export function AddRecord({
     },
   });
 
-  const router = useRouter();
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: addNewCountSpaceItem,
     onSuccess: () => {
       form.reset();
+      router.refresh();
+      if (cancelButtonRef.current) {
+        cancelButtonRef.current.click();
+      }
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { description, amount } = values;
     mutateAsync({ amount, name: description, countSpaceCategoryId });
-    console.log(values);
   }
 
   return (
@@ -109,6 +117,11 @@ export function AddRecord({
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
                 Add record
               </Button>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary" ref={cancelButtonRef}>
+                  Cancel
+                </Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </Form>
