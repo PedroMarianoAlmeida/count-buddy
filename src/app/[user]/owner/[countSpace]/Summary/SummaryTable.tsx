@@ -18,12 +18,12 @@ const SummaryTable = ({ categories }: CategoriesTableProps) => {
     { key: "unit", value: "Unit" },
     { key: "actions", value: "Actions" },
   ];
-  const tableRows = categories.map(({ name, budget, unit, items }) => ({
+  const tableRows = categories.map(({ name, budget, unit, items, id }) => ({
     name,
     budget: budget ?? "-",
     total: items.reduce((acc, { amount }) => acc + amount, 0),
     unit: unit ?? "-",
-    actions: <SummaryActions category={name}/>,
+    actions: <SummaryActions category={name} countSpaceCategoryId={id} />,
   }));
 
   return (

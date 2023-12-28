@@ -1,7 +1,9 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useMutation } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,13 +18,14 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { addNewCountSpaceItem } from "@/server/actions/countSpaceItem";
+import { isLoading } from "@/utils/formHelpers";
 
 const formSchema = z.object({
   description: z.string(),
@@ -32,7 +35,13 @@ const formSchema = z.object({
     .refine((val) => val !== 0, { message: "Amount can't be 0" }),
 });
 
-export function AddRecord({ category }: { category: string }) {
+export function AddRecord({
+  category,
+  countSpaceCategoryId,
+}: {
+  category: string;
+  countSpaceCategoryId: number;
+}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,9 +50,16 @@ export function AddRecord({ category }: { category: string }) {
     },
   });
 
+  const router = useRouter();
+  const { mutateAsync, isIdle, isSuccess } = useMutation({
+    mutationFn: addNewCountSpaceItem,
+    onSuccess: () => {
+      form.reset();
+    },
+  });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    const { description, amount } = values;
+    mutateAsync({ amount, name: description, countSpaceCategoryId });
     console.log(values);
   }
 
@@ -90,7 +106,9 @@ export function AddRecord({ category }: { category: string }) {
 
             {/* TODO: ADD DATE */}
             <DialogFooter>
-              <Button type="submit">Add record</Button>
+              <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
+                Add record
+              </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -2,10 +2,16 @@
 
 import { AddRecord } from "./AddRecord";
 
-const SummaryActions = ({category}: {category: string}) => {
+const SummaryActions = ({
+  category,
+  countSpaceCategoryId,
+}: {
+  category: string;
+  countSpaceCategoryId: number;
+}) => {
   return (
     <div>
-      <AddRecord category={category}/>
+      <AddRecord category={category} countSpaceCategoryId={countSpaceCategoryId}/>
     </div>
   );
 };
