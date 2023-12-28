@@ -1,4 +1,5 @@
 import TableHandler from "@/components/TableHandler";
+import { convertDateToYYYYMMDD } from "@/utils/date";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
@@ -24,10 +25,12 @@ const HistoryTable = ({ categories }: CategoriesTableProps) => {
         name,
         amount,
         actions: "Edit",
-        createdAt: createdAt.toDateString(),
+        createdAt: convertDateToYYYYMMDD(createdAt),
+        sort: createdAt.getTime(),
       }))
     )
-    .flat(); //TODO: Sort by date (because is group by name)
+    .flat()
+    .sort((a, b) => b.sort - a.sort);
 
   return (
     <div>
