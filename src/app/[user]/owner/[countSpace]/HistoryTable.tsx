@@ -31,7 +31,7 @@ const HistoryTable = ({ categories }: CategoriesTableProps) => {
 
   return (
     <div>
-      <h2>History</h2>
+      <h2 className="my-0">History</h2>
       <TableHandler columnHeaders={tableHeader} rows={tableRows} />
     </div>
   );

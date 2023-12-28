@@ -31,7 +31,7 @@ const SummaryTable = ({ categories, countSpaceId }: CategoriesTableProps) => {
   return (
     <div>
       <div className="flex gap-3 items-center">
-        <h2>Summary</h2>
+        <h2 className="my-0">Summary</h2>
         <NewCategory countSpaceId={countSpaceId} />
       </div>
 
