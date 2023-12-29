@@ -1,5 +1,3 @@
-"use client";
-
 import { AddRecord } from "./AddRecord";
 import { EditCategory } from "./EditCategory";
 
