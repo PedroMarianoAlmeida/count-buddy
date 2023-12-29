@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 
 import { CountSpace, UserCountSpaceGuest } from "@prisma/client";
 import { NewCountSpace } from "./NewCountSpace";
+import OwnedCountSpaceActions from "./OwnedCountSpaceActions";
 
 interface ExtendedCountSpace extends CountSpace {
   guests: UserCountSpaceGuest[];
@@ -17,18 +18,23 @@ const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
     { key: "actions", value: "Actions" },
   ];
 
-  const tableRows = countSpace.map(({ name, guests }) => ({
+  const tableRows = countSpace.map(({ name, guests, ownerName }) => ({
     name,
     // TODO: For each guest, add the option to remove them from the Count Space
-    guests: guests.length === 0 ? "-" : guests.map(({ userName }) => userName).join(", "),
-    actions: "Add guest | Edit | Delete | Visit", // TODO: Add actions
+    guests:
+      guests.length === 0
+        ? "-"
+        : guests.map(({ userName }) => userName).join(", "),
+    actions: (
+      <OwnedCountSpaceActions ownerName={ownerName} countSpaceName={name} />
+    ),
   }));
 
   return (
     <div>
       <div className="flex gap-3 items-center">
         <h2 className="my-0">My Count Spaces</h2>
-       <NewCountSpace />
+        <NewCountSpace />
       </div>
 
       <TableHandler columnHeaders={tableHeader} rows={tableRows} />
