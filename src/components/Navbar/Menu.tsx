@@ -12,8 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { UserSanitizer } from "@/utils/user";
 
-const Menu = ({ userName }: { userName: string | null }) => {
+const Menu = ({
+  userName,
+  isValid,
+  email,
+}: Pick<UserSanitizer, "userName" | "isValid" | "email">) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,25 +27,21 @@ const Menu = ({ userName }: { userName: string | null }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {userName ? (
-          <>
-            <DropdownMenuItem>
-              <Button
-                variant="link"
-                className="w-full"
-                onClick={() => signOut()}
-              >
-                Logout
+        {userName && (
+          <DropdownMenuItem>
+            <Link href={`/user/${userName}`}>
+              <Button variant="link" className="w-full">
+                Dashboard
               </Button>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={`/user/${userName}`}>
-                <Button variant="link" className="w-full">
-                  Dashboard
-                </Button>
-              </Link>
-            </DropdownMenuItem>
-          </>
+            </Link>
+          </DropdownMenuItem>
+        )}
+        {email ? (
+          <DropdownMenuItem>
+            <Button variant="link" className="w-full" onClick={() => signOut()}>
+              Logout
+            </Button>
+          </DropdownMenuItem>
         ) : (
           <DropdownMenuItem>
             <Button variant="link" className="w-full" onClick={() => signIn()}>
@@ -48,6 +49,7 @@ const Menu = ({ userName }: { userName: string | null }) => {
             </Button>
           </DropdownMenuItem>
         )}
+
         <DropdownMenuItem></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

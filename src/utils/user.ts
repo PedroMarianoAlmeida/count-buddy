@@ -15,10 +15,10 @@ interface UserSanitizerError {
   userId: number | null;
 }
 
+export type UserSanitizer = UserSanitizerSuccess | UserSanitizerError;
+
 //With this types, always than isValid is true, the types of email and userName are defined
-export const userSanitizer = async (): Promise<
-  UserSanitizerSuccess | UserSanitizerError
-> => {
+export const userSanitizer = async (): Promise<UserSanitizer> => {
   const session = await getServerSession();
   const email = session?.user?.email;
 

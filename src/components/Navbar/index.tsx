@@ -5,7 +5,7 @@ import Menu from "./Menu";
 import { userSanitizer } from "@/utils/user";
 
 const Navbar = async () => {
-  const { userName } = await userSanitizer();
+  const { userName, isValid, email} = await userSanitizer();
 
   return (
     <>
@@ -16,7 +16,7 @@ const Navbar = async () => {
           </Link>
         </div>
         <div className="flex-none">
-          <Menu userName={userName} />
+          <Menu userName={userName} isValid={isValid} email={email}/>
         </div>
       </header>
       <div className="h-14" />
