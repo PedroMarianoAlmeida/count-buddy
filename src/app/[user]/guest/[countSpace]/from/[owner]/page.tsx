@@ -1,28 +1,12 @@
 import HistoryTable from "@/components/Shared/HistoryTable";
 import SummaryTable from "@/components/Shared/SummaryTable";
 import { getOneCountSpace } from "@/server/actions/countSpace";
-import { getUserNameByEmail } from "@/server/actions/user";
-import { getServerSession } from "next-auth";
 
 const CountSpaceGuestPage = async ({
-  params: { user, countSpace, owner },
+  params: { countSpace, owner },
 }: {
   params: { user: string; countSpace: string; owner: string };
 }) => {
-  const session = await getServerSession();
-  if (!session || !session.user || !session.user.email)
-    return <div>Go back home page</div>;
-
-  const data = await getUserNameByEmail(session.user.email);
-  if (!data.success) return <div>Go back home page</div>;
-
-  const {
-    result: { name },
-  } = data;
-
-  if (name !== user) return <div>Go back home page</div>;
-  // -----------------------------
-
   const countSpaceDetails = await getOneCountSpace({
     countSpaceName: countSpace,
     ownerName: owner,
