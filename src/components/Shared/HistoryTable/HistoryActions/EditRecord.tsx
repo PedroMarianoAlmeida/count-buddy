@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { use, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,6 +71,13 @@ export function EditRecord({
     const { description, amount } = values;
     mutateAsync({ amount, name: description, countSpaceItemId });
   }
+
+  useEffect(() => {
+    form.reset({
+      description: name ?? "",
+      amount: amount,
+    });
+  }, [name, amount, form]);
 
   return (
     <Dialog>

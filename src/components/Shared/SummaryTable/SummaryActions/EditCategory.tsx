@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,6 +56,14 @@ export function EditCategory({
       name: categoryName,
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      name: categoryName,
+      budget: budget ?? 0,
+      unit: unit ?? "",
+    });
+  }, [categoryName, budget, unit, form]);
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: updateCountSpaceCategory,
