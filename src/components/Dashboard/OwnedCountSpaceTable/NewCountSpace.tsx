@@ -28,24 +28,24 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { isLoading } from "@/utils/formHelpers";
-import { addNewCountSpaceCategory } from "@/server/actions/countSpaceCategory";
-import { category } from "@/utils/formValidation";
+import { createNewCountSpace } from "@/server/actions/countSpace";
 
-export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
+const formSchema = z.object({
+  name: z.string().min(3),
+});
+export function NewCountSpace() {
   const router = useRouter();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
-  const form = useForm<z.infer<typeof category>>({
-    resolver: zodResolver(category),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      budget: 0,
-      unit: "",
     },
   });
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
-    mutationFn: addNewCountSpaceCategory,
+    mutationFn: createNewCountSpace,
     onSuccess: () => {
       form.reset();
       router.refresh();
@@ -54,15 +54,15 @@ export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
       }
     },
   });
-  function onSubmit(values: z.infer<typeof category>) {
-    const { name, budget, unit } = values;
-    mutateAsync({ name, budget, unit, countSpaceId });
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const { name } = values;
+    mutateAsync(name);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">New Category</Button>
+        <Button variant="outline">New Count Space</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -84,36 +84,9 @@ export function NewCategory({ countSpaceId }: { countSpaceId: number }) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="budget"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Budget</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="unit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit</FormLabel>
-                  <FormControl>
-                    <Input placeholder="$, bananas, etc" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <DialogFooter>
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
-                Add category
+                Add Count Space
               </Button>
               <DialogClose asChild>
                 <Button type="button" variant="secondary" ref={cancelButtonRef}>

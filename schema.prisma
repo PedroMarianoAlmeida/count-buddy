@@ -20,6 +20,7 @@ model User {
 model CountSpace {
   id         Int                   @id @default(autoincrement())
   name       String
+  // TODO: Add description with Rich Text
   createdAt  DateTime              @default(now())
   owner      User                  @relation(fields: [ownerName], references: [name])
   ownerName  String
