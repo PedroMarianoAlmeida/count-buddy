@@ -13,6 +13,9 @@ export const getAllUserCountSpaces = async () => {
   return await queryWrapper(async () => {
     const countSpaces = await prisma.countSpace.findMany({
       where: { owner: { name: userName } },
+      include: {
+        guests: true
+      }
     });
 
     return countSpaces;
