@@ -1,11 +1,7 @@
 import OwnedCountSpaceTable from "@/components/Dashboard/OwnedCountSpaceTable";
 import { getAllUserCountSpaces } from "@/server/actions/countSpace";
 
-const DashboardPage = async ({
-  params: { user },
-}: {
-  params: { user: string };
-}) => {
+const DashboardPage = async () => {
   const countSpace = await getAllUserCountSpaces();
 
   if (!countSpace.success) return <div>Failing fetching your Count Spaces</div>;

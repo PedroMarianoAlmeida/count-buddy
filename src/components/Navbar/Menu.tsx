@@ -25,7 +25,6 @@ const Menu = ({ userName }: { userName: string | null }) => {
         {userName ? (
           <>
             <DropdownMenuItem>
-              {" "}
               <Button
                 variant="link"
                 className="w-full"
@@ -35,7 +34,7 @@ const Menu = ({ userName }: { userName: string | null }) => {
               </Button>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/${userName}`}>
+              <Link href={`/user/${userName}`}>
                 <Button variant="link" className="w-full">
                   Dashboard
                 </Button>
