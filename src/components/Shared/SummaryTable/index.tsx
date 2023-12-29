@@ -2,8 +2,6 @@ import TableHandler from "@/components/TableHandler";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
 import SummaryActions from "./SummaryActions";
 import { NewCategory } from "./NewCategory";
-import { Edit } from "lucide-react";
-import { EditCategory } from "./EditCategory";
 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
   items: CountSpaceItem[];
