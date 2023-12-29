@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -11,9 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-const Menu = () => {
-  const { data: session } = useSession();
+const Menu = ({ userName }: { userName: string | null }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,17 +22,34 @@ const Menu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          {session ? (
-            <Button variant="link" className="w-full" onClick={() => signOut()}>
-              Logout
-            </Button>
-          ) : (
+        {userName ? (
+          <>
+            <DropdownMenuItem>
+              {" "}
+              <Button
+                variant="link"
+                className="w-full"
+                onClick={() => signOut()}
+              >
+                Logout
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/${userName}`}>
+                <Button variant="link" className="w-full">
+                  Dashboard
+                </Button>
+              </Link>
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <DropdownMenuItem>
             <Button variant="link" className="w-full" onClick={() => signIn()}>
               Login
             </Button>
-          )}
-        </DropdownMenuItem>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
