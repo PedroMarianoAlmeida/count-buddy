@@ -22,8 +22,15 @@ export interface OnlyUsername {
   username: string;
 }
 
-export const checkUserNameExists = async ({ username }: OnlyUsername) => {
+interface CheckUserNameExists extends OnlyUsername {
+  min?: number;
+}
+export const checkUserNameExists = async ({
+  username,
+  min = 0,
+}: CheckUserNameExists) => {
   return await queryWrapper<{ exist: boolean }>(async () => {
+    if (username.length < min) throw new Error("Username too short");
     const user = await prisma.user.findUnique({
       where: {
         name: username,

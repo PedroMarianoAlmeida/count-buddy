@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { urlFormatter } from "@/utils/text";
 import {
@@ -15,14 +16,35 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { checkUserNameExists, postNewUserName } from "@/server/actions/user";
+import { isLoading } from "@/utils/formHelpers";
+
+const formSchema = z.object({
+  name: z.string().min(3),
+});
 
 const RegisterUserForm = () => {
   const [message, setMessage] = useState("");
   const [nameTreated, setNameTreated] = useState("");
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  const formSchema = z.object({
-    name: z.string().min(3), //.refine check BD,
-  });
+  const { data: isUsernameInUse, isLoading: isCheckUsernameLoading } = useQuery(
+    {
+      queryKey: ["user", nameTreated],
+      queryFn: () => checkUserNameExists({ username: nameTreated, min: 3 }),
+    }
+  );
+
+  useEffect(() => {
+    if (isCheckUsernameLoading) return;
+    if (isUsernameInUse?.success) {
+      if (isUsernameInUse.result.exist) {
+        setMessage(`${nameTreated} is already in use`);
+      } else {
+        setMessage(`${nameTreated} is available`);
+      }
+    } else setMessage("");
+  }, [nameTreated, isUsernameInUse]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,6 +53,14 @@ const RegisterUserForm = () => {
     },
   });
   const rawInput = form.watch("name");
+
+  useEffect(() => {
+    if (isCheckUsernameLoading) setIsSubmitDisabled(true);
+    else if (message === "") setIsSubmitDisabled(true);
+    else if (message === `${nameTreated} is available`)
+      setIsSubmitDisabled(false);
+  }, [isCheckUsernameLoading, message, rawInput]);
+
   useEffect(() => {
     const nameTreated = urlFormatter(rawInput);
     setNameTreated(nameTreated);
@@ -38,9 +68,18 @@ const RegisterUserForm = () => {
     if (rawInput !== nameTreated) setMessage(`Name treated: ${nameTreated}`);
   }, [rawInput]);
 
+  const { mutateAsync, isIdle, isSuccess } = useMutation({
+    mutationFn: postNewUserName,
+    onSuccess: () => {
+      form.reset();
+      console.log("success");
+      // useRouter is not working, so I'm using window.location.href
+      window.location.href = "/";
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // const { description, amount } = values;
-    // mutateAsync({ amount, name: description, countSpaceCategoryId });
+    mutateAsync({ username: nameTreated });
   }
 
   return (
@@ -59,7 +98,13 @@ const RegisterUserForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Register</Button>
+
+        <Button
+          type="submit"
+          disabled={isSubmitDisabled || isLoading({ isIdle, isSuccess })}
+        >
+          Register
+        </Button>
       </form>
     </Form>
   );
