@@ -14,15 +14,21 @@ export const getAllUserCountSpaces = async () => {
     const countSpaces = await prisma.countSpace.findMany({
       where: { owner: { name: userName } },
       include: {
-        guests: true
-      }
+        guests: true,
+      },
     });
 
     return countSpaces;
   });
 };
 
-export const createNewCountSpace = async (name: string) => {
+export const createNewCountSpace = async ({
+  name,
+  slug,
+}: {
+  name: string;
+  slug: string;
+}) => {
   const { userName } = await userSanitizer();
   if (userName === null) {
     throw new Error("userName is null");
@@ -32,6 +38,7 @@ export const createNewCountSpace = async (name: string) => {
     const newCountSpace = await prisma.countSpace.create({
       data: {
         name,
+        slug,
         owner: { connect: { name: userName } },
       },
     });
@@ -41,18 +48,18 @@ export const createNewCountSpace = async (name: string) => {
 };
 
 export const getOneCountSpace = async ({
-  countSpaceName,
+  countSpaceSlug,
   ownerName,
 }: {
-  countSpaceName: string;
+  countSpaceSlug: string;
   ownerName: string;
 }) => {
   return await queryWrapper(async () => {
     const countSpace = await prisma.countSpace.findUnique({
       where: {
-        ownerName_name: {
+        ownerName_slug: {
           ownerName,
-          name: countSpaceName,
+          slug: countSpaceSlug,
         },
       },
       include: {

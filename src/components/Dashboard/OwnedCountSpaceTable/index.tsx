@@ -1,5 +1,4 @@
 import TableHandler from "@/components/TableHandler";
-import { Button } from "@/components/ui/button";
 
 import { CountSpace, UserCountSpaceGuest } from "@prisma/client";
 import { NewCountSpace } from "./NewCountSpace";
@@ -18,7 +17,7 @@ const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
     { key: "actions", value: "Actions" },
   ];
 
-  const tableRows = countSpace.map(({ name, guests, ownerName }) => ({
+  const tableRows = countSpace.map(({ name, guests, ownerName, slug }) => ({
     name,
     // TODO: For each guest, add the option to remove them from the Count Space
     guests:
@@ -26,7 +25,7 @@ const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
         ? "-"
         : guests.map(({ userName }) => userName).join(", "),
     actions: (
-      <OwnedCountSpaceActions ownerName={ownerName} countSpaceName={name} />
+      <OwnedCountSpaceActions ownerName={ownerName} countSpaceSlug={slug} />
     ),
   }));
 

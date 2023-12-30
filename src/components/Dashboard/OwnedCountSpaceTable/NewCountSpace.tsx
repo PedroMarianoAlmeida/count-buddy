@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { isLoading } from "@/utils/formHelpers";
 import { createNewCountSpace } from "@/server/actions/countSpace";
+import { urlFormatter } from "@/utils/text";
 
 const formSchema = z.object({
   name: z.string().min(3),
@@ -56,7 +57,8 @@ export function NewCountSpace() {
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { name } = values;
-    mutateAsync(name);
+    const slug = urlFormatter(name);
+    mutateAsync({ name, slug });
   }
 
   return (

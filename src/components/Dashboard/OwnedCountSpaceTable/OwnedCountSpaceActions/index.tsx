@@ -3,15 +3,15 @@ import Link from "next/link";
 import More from "./More";
 
 const OwnedCountSpaceActions = ({
-  countSpaceName,
   ownerName,
+  countSpaceSlug,
 }: {
-  countSpaceName: string;
   ownerName: string;
+  countSpaceSlug: string;
 }) => {
   return (
     <div className="flex gap-2">
-      <Link href={`/user/${ownerName}/owner/${countSpaceName}`}>
+      <Link href={`/user/${ownerName}/owner/${countSpaceSlug}`}>
         <Button variant="outline">Visit</Button>
       </Link>
       <More />

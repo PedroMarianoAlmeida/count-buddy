@@ -12,7 +12,7 @@ const CountSpacePage = async ({
 }) => {
 
   const countSpaceDetails = await getOneCountSpace({
-    countSpaceName: countSpace,
+    countSpaceSlug: countSpace,
     ownerName: user,
   });
 
