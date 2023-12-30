@@ -9,24 +9,26 @@ datasource db {
 }
 
 model User {
-  id               Int                   @id @default(autoincrement())
-  name             String                @unique
-  email            String                @unique
-  createdAt        DateTime              @default(now())
-  countSpaces      CountSpace[]
-  countSpaceGuests UserCountSpaceGuest[]
+  id                Int                       @id @default(autoincrement())
+  name              String                    @unique
+  email             String                    @unique
+  createdAt         DateTime                  @default(now())
+  countSpaces       CountSpace[]
+  countSpaceGuests  UserCountSpaceGuest[]
+  countSpaceInvites UserInvitedToCountSpace[]
 }
 
 model CountSpace {
-  id         Int                   @id @default(autoincrement())
+  id         Int                       @id @default(autoincrement())
   name       String
-  slug       String                @unique
+  slug       String                    @unique
   // TODO: Add description with Rich Text
-  createdAt  DateTime              @default(now())
-  owner      User                  @relation(fields: [ownerName], references: [name])
+  createdAt  DateTime                  @default(now())
+  owner      User                      @relation(fields: [ownerName], references: [name])
   ownerName  String
   guests     UserCountSpaceGuest[]
   categories CountSpaceCategory[]
+  invites    UserInvitedToCountSpace[]
 
   @@unique([ownerName, slug])
 }
@@ -58,6 +60,16 @@ model CountSpaceItem {
 model UserCountSpaceGuest {
   id           Int        @id @default(autoincrement())
   createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userName], references: [name])
+  userName     String
+  countSpace   CountSpace @relation(fields: [countSpaceId], references: [id])
+  countSpaceId Int
+
+  @@unique([userName, countSpaceId])
+}
+
+model UserInvitedToCountSpace {
+  id           Int        @id @default(autoincrement())
   user         User       @relation(fields: [userName], references: [name])
   userName     String
   countSpace   CountSpace @relation(fields: [countSpaceId], references: [id])

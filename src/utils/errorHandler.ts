@@ -16,7 +16,6 @@ export const queryWrapper = async <T>(
     const result = await callback();
     return { success: true, result };
   } catch (error: any) {
-    // console.log("queryWrapper function error", { error });
     let message = "Unknown Error";
     if (error instanceof Error) message = error.message;
     return { success: false, message };

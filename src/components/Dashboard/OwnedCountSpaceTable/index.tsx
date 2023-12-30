@@ -17,7 +17,7 @@ const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
     { key: "actions", value: "Actions" },
   ];
 
-  const tableRows = countSpace.map(({ name, guests, ownerName, slug }) => ({
+  const tableRows = countSpace.map(({ name, guests, ownerName, slug, id }) => ({
     name,
     // TODO: For each guest, add the option to remove them from the Count Space
     guests:
@@ -25,7 +25,11 @@ const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
         ? "-"
         : guests.map(({ userName }) => userName).join(", "),
     actions: (
-      <OwnedCountSpaceActions ownerName={ownerName} countSpaceSlug={slug} />
+      <OwnedCountSpaceActions
+        ownerName={ownerName}
+        countSpaceSlug={slug}
+        countSpaceId={id}
+      />
     ),
   }));
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { queryWrapper } from "@/utils/errorHandler";
-import { prisma } from "@/utils/prismaThingsUsedForServerActions.ts";
+import { prisma } from "@/utils/prismaThingsUsedForServerActions";
 import { userSanitizer } from "@/utils/user";
 
 export const getAllUserCountSpaces = async () => {
