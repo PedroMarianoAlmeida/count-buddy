@@ -8,7 +8,7 @@ const CountSpaceGuestPage = async ({
   params: { user: string; countSpace: string; owner: string };
 }) => {
   const countSpaceDetails = await getOneCountSpace({
-    countSpaceName: countSpace,
+    countSpaceSlug: countSpace,
     ownerName: owner,
   });
 

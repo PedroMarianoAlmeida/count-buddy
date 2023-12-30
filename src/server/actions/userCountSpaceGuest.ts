@@ -1,7 +1,7 @@
 'use server'
 
 import { queryWrapper } from "@/utils/errorHandler";
-import { prisma } from "@/utils/prismaThingsUsedForServerActions.ts";
+import { prisma } from "@/utils/prismaThingsUsedForServerActions";
 
 export const addUserAsGuestInExistingCountSpace = async ({
     guestName,
