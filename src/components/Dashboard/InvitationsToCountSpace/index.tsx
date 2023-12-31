@@ -1,5 +1,6 @@
 import TableHandler from "@/components/TableHandler";
 import { getAllInvitationsForUser } from "@/server/actions/userInvitedToCountSpace";
+import InvitationsToCountSpaceActions from "./InvitationsToCountSpaceActions";
 
 const InvitationsToCountSpace = async () => {
   const invitations = await getAllInvitationsForUser();
@@ -13,10 +14,10 @@ const InvitationsToCountSpace = async () => {
   ];
 
   const tableRows = invitations.result.map(
-    ({ countSpace: { name, ownerName, id } }) => ({
+    ({ countSpace: { name, ownerName }, id }) => ({
       name,
       owner: ownerName,
-      actions: "Accept / Decline",
+      actions: <InvitationsToCountSpaceActions invitationId={id} />,
     })
   );
   return (

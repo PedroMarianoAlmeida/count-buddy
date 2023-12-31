@@ -6,6 +6,7 @@ import {
 import { queryWrapper } from "@/utils/errorHandler";
 
 import { userSanitizer } from "@/utils/user";
+import { addUserAsGuestInExistingCountSpace } from "./userCountSpaceGuest";
 
 export const addUserInvitationToCountSpace = async ({
   guestName,
@@ -50,5 +51,28 @@ export const getAllInvitationsForUser = async () => {
     });
 
     return invitations;
+  });
+};
+
+export const acceptInvitation = async ({
+  invitationId,
+}: {
+  invitationId: number;
+}) => {
+  return await transactionWrapper(async () => {
+    const invitation = await prisma.userInvitedToCountSpace.delete({
+      where: { id: invitationId },
+    });
+
+    const { countSpaceId, userName } = invitation;
+
+    const countSpace = await addUserAsGuestInExistingCountSpace({
+      countSpaceId,
+      guestName: userName,
+    });
+
+    if (!countSpace.success) throw new Error(countSpace.message);
+    console.log("FOI");
+    return { message: "Invitation accepted" };
   });
 };
