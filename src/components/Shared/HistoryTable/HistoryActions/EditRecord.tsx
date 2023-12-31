@@ -32,6 +32,14 @@ import { isLoading } from "@/utils/formHelpers";
 import { CountSpaceItemShared } from "@/components/Shared/HistoryTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 const formSchema = z.object({
   description: z.string(),
@@ -39,12 +47,14 @@ const formSchema = z.object({
     .number()
     .safe()
     .refine((val) => val !== 0, { message: "Amount can't be 0" }),
+  date: z.date(),
 });
 
 export function EditRecord({
   amount,
   id: countSpaceItemId,
   name,
+  itemDate,
 }: CountSpaceItemShared) {
   const router = useRouter();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
@@ -54,12 +64,13 @@ export function EditRecord({
     defaultValues: {
       description: name ?? "",
       amount: amount,
+      date: itemDate,
     },
   });
 
   const { mutateAsync, isIdle, isSuccess } = useMutation({
     mutationFn: updateCountSpaceItem,
-    onSuccess: () => {
+    onSuccess: (data) => {
       form.reset();
       router.refresh();
       if (cancelButtonRef.current) {
@@ -68,16 +79,22 @@ export function EditRecord({
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { description, amount } = values;
-    mutateAsync({ amount, name: description, countSpaceItemId });
+    const { description, amount, date } = values;
+    mutateAsync({
+      amount,
+      name: description,
+      countSpaceItemId,
+      itemDate: date,
+    });
   }
 
   useEffect(() => {
     form.reset({
       description: name ?? "",
       amount: amount,
+      date: itemDate,
     });
-  }, [name, amount, form]);
+  }, [name, amount, itemDate, form]);
 
   return (
     <Dialog>
@@ -120,7 +137,35 @@ export function EditRecord({
               )}
             />
 
-            {/* TODO: ADD DATE */}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel className="block mb-1">Date</FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant={"outline"}>
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {format(form.watch("date"), "yyyy MMM dd")}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            className="rounded-md border"
+                            onSelect={field.onChange}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
             <DialogFooter>
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
                 Edit

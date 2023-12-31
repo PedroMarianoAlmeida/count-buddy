@@ -33,15 +33,17 @@ export const updateCountSpaceItem = async ({
   countSpaceItemId,
   name,
   amount,
+  itemDate,
 }: {
   countSpaceItemId: number;
   name: string;
   amount: number;
+  itemDate: Date;
 }) => {
   return await queryWrapper(async () => {
     const updatedCountSpaceItem = await prisma.countSpaceItem.update({
       where: { id: countSpaceItemId },
-      data: { name, amount },
+      data: { name, amount, itemDate },
     });
     return updatedCountSpaceItem;
   });
