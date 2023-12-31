@@ -155,7 +155,7 @@ export function EditRecord({
                         <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
-                            className="rounded-md border"
+                            className="rounded-md border bg-white"
                             onSelect={field.onChange}
                           />
                         </PopoverContent>
