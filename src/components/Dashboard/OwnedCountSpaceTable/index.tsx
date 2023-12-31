@@ -3,6 +3,7 @@ import TableHandler from "@/components/TableHandler";
 import { NewCountSpace } from "./NewCountSpace";
 import OwnedCountSpaceActions from "./OwnedCountSpaceActions";
 import { getAllUserCountSpaces } from "@/server/actions/countSpace";
+import { table } from "console";
 
 const OwnedCountSpaceTable = async () => {
   const countSpace = await getAllUserCountSpaces();
@@ -38,8 +39,12 @@ const OwnedCountSpaceTable = async () => {
         <h2 className="my-0">My Count Spaces</h2>
         <NewCountSpace />
       </div>
-
-      <TableHandler columnHeaders={tableHeader} rows={tableRows} />
+      
+      {tableRows.length === 0 ? (
+        <div>No Count Spaces</div>
+      ) : (
+        <TableHandler columnHeaders={tableHeader} rows={tableRows} />
+      )}
     </div>
   );
 };
