@@ -29,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { addNewCountSpaceItem } from "@/server/actions/countSpaceItem";
 import { isLoading } from "@/utils/formHelpers";
+import { Calendar } from "@/components/ui/calendar";
 
 const formSchema = z.object({
   description: z.string(),
@@ -36,6 +37,7 @@ const formSchema = z.object({
     .number()
     .safe()
     .refine((val) => val !== 0, { message: "Amount can't be 0" }),
+  date: z.date(),
 });
 
 export function AddRecord({
@@ -53,6 +55,7 @@ export function AddRecord({
     defaultValues: {
       description: "",
       amount: 0,
+      date: new Date(),
     },
   });
 
@@ -67,8 +70,9 @@ export function AddRecord({
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { description, amount } = values;
-    mutateAsync({ amount, name: description, countSpaceCategoryId });
+    const { description, amount, date } = values;
+    console.log({ date });
+    //mutateAsync({ amount, name: description, countSpaceCategoryId });
   }
 
   return (
@@ -112,7 +116,23 @@ export function AddRecord({
               )}
             />
 
-            {/* TODO: ADD DATE */}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Calendar
+                      mode="single"
+                      className="rounded-md border"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <DialogFooter>
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
                 Add record
