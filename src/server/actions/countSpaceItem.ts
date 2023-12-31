@@ -7,10 +7,12 @@ export const addNewCountSpaceItem = async ({
   countSpaceCategoryId,
   name,
   amount,
+  itemDate,
 }: {
   countSpaceCategoryId: number;
   name: string;
   amount: number;
+  itemDate: Date;
 }) => {
   // TODO: Check if the user is the owner or guest of the countSpace
 
@@ -19,6 +21,7 @@ export const addNewCountSpaceItem = async ({
       data: {
         name,
         amount,
+        itemDate,
         countSpaceCategory: { connect: { id: countSpaceCategoryId } },
       },
     });

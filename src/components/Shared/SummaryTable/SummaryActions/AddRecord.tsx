@@ -78,8 +78,12 @@ export function AddRecord({
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { description, amount, date } = values;
-    console.log({ date });
-    //mutateAsync({ amount, name: description, countSpaceCategoryId });
+    mutateAsync({
+      amount,
+      name: description,
+      countSpaceCategoryId,
+      itemDate: date,
+    });
   }
 
   return (
@@ -134,7 +138,7 @@ export function AddRecord({
                       <PopoverTrigger asChild>
                         <Button variant={"outline"}>
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {format(form.watch("date"), "PPP")}
+                          {format(form.watch("date"), "yyyy MMM dd")}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">

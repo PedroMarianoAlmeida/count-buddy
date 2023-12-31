@@ -2,6 +2,7 @@ import TableHandler from "@/components/TableHandler";
 import { convertDateToYYYYMMDD } from "@/utils/date";
 import { CountSpaceCategory, CountSpaceItem } from "@prisma/client";
 import HistoryActions from "./HistoryActions";
+import { format } from "date-fns";
 
 export type CountSpaceItemShared = Pick<CountSpaceItem, "name" | "amount" | "id"> 
 interface ExtendedCountSpaceCategory extends CountSpaceCategory {
@@ -17,19 +18,19 @@ const HistoryTable = ({ categories }: CategoriesTableProps) => {
     { key: "category", value: "Category" },
     { key: "name", value: "Description" },
     { key: "amount", value: "Amount" },
-    { key: "createdAt", value: "Date" },
+    { key: "itemDate", value: "Date" },
     { key: "actions", value: "Actions" },
   ];
   const tableRows = categories
     .map(({ name: category, items }) =>
-      items.map(({ name, amount, createdAt, id }) => ({
+      items.map(({ name, amount, createdAt, id, itemDate }) => ({
         category,
         name,
         amount,
         actions: (
           <HistoryActions name={name} amount={amount} id={id} />
         ),
-        createdAt: convertDateToYYYYMMDD(createdAt),
+        itemDate: format(itemDate, "yyyy MMM dd"),
         sort: createdAt.getTime(),
       }))
     )
