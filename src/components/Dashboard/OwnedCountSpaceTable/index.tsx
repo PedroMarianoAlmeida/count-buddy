@@ -1,37 +1,36 @@
 import TableHandler from "@/components/TableHandler";
 
-import { CountSpace, UserCountSpaceGuest } from "@prisma/client";
 import { NewCountSpace } from "./NewCountSpace";
 import OwnedCountSpaceActions from "./OwnedCountSpaceActions";
+import { getAllUserCountSpaces } from "@/server/actions/countSpace";
 
-interface ExtendedCountSpace extends CountSpace {
-  guests: UserCountSpaceGuest[];
-}
-interface OwnedCountSpaceTableProps {
-  countSpace: ExtendedCountSpace[];
-}
-const OwnedCountSpaceTable = ({ countSpace }: OwnedCountSpaceTableProps) => {
+const OwnedCountSpaceTable = async () => {
+  const countSpace = await getAllUserCountSpaces();
+  if (!countSpace.success) return <div>Failing fetching your Count Spaces</div>;
+
   const tableHeader = [
     { key: "name", value: "Name" },
     { key: "guests", value: "Guests" },
     { key: "actions", value: "Actions" },
   ];
 
-  const tableRows = countSpace.map(({ name, guests, ownerName, slug, id }) => ({
-    name,
-    // TODO: For each guest, add the option to remove them from the Count Space
-    guests:
-      guests.length === 0
-        ? "-"
-        : guests.map(({ userName }) => userName).join(", "),
-    actions: (
-      <OwnedCountSpaceActions
-        ownerName={ownerName}
-        countSpaceSlug={slug}
-        countSpaceId={id}
-      />
-    ),
-  }));
+  const tableRows = countSpace.result.map(
+    ({ name, guests, ownerName, slug, id }) => ({
+      name,
+      // TODO: For each guest, add the option to remove them from the Count Space
+      guests:
+        guests.length === 0
+          ? "-"
+          : guests.map(({ userName }) => userName).join(", "),
+      actions: (
+        <OwnedCountSpaceActions
+          ownerName={ownerName}
+          countSpaceSlug={slug}
+          countSpaceId={id}
+        />
+      ),
+    })
+  );
 
   return (
     <div>
