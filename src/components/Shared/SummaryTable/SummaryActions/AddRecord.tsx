@@ -26,6 +26,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { addNewCountSpaceItem } from "@/server/actions/countSpaceItem";
 import { isLoading } from "@/utils/formHelpers";
@@ -121,13 +128,23 @@ export function AddRecord({
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel className="block mb-1">Date</FormLabel>
                   <FormControl>
-                    <Calendar
-                      mode="single"
-                      className="rounded-md border"
-                      {...field}
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant={"outline"}>
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {format(form.watch("date"), "PPP")}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          className="rounded-md border"
+                          onSelect={field.onChange}
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
