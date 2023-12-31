@@ -30,7 +30,17 @@ model CountSpace {
   categories CountSpaceCategory[]
   invites    UserInvitedToCountSpace[]
 
+  defaultCycleUnit CycleUnit @default(MONTH)
+  defaultCycle     Int       @default(1)
+
   @@unique([ownerName, slug])
+}
+
+enum CycleUnit {
+  DAY
+  WEEK
+  MONTH
+  YEAR
 }
 
 model CountSpaceCategory {

@@ -26,22 +26,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { isLoading } from "@/utils/formHelpers";
 import { createNewCountSpace } from "@/server/actions/countSpace";
 import { urlFormatter } from "@/utils/text";
+import { CycleUnit } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(3),
+  defaultCycleUnit: z.nativeEnum(CycleUnit),
+  defaultCycle: z.number().int().positive(),
 });
 export function NewCountSpace() {
   const router = useRouter();
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      defaultCycleUnit: CycleUnit.MONTH,
+      defaultCycle: 1,
     },
   });
 
@@ -56,9 +67,9 @@ export function NewCountSpace() {
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { name } = values;
+    const { name, defaultCycle, defaultCycleUnit } = values;
     const slug = urlFormatter(name);
-    mutateAsync({ name, slug });
+    mutateAsync({ name, slug, defaultCycle, defaultCycleUnit });
   }
 
   return (
@@ -86,6 +97,46 @@ export function NewCountSpace() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="defaultCycle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cycle</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="defaultCycleUnit"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {/* TODO: Pass this options to a .map with all values in ENUM */}
+                      <SelectItem value="YEAR">Year</SelectItem>
+                      <SelectItem value="MONTH">Month</SelectItem>
+                      <SelectItem value="WEEK">Week</SelectItem>
+                      <SelectItem value="DAY">Day</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <DialogFooter>
               <Button type="submit" disabled={isLoading({ isIdle, isSuccess })}>
                 Add Count Space

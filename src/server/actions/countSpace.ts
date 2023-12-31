@@ -3,6 +3,7 @@
 import { queryWrapper } from "@/utils/errorHandler";
 import { prisma } from "@/utils/prismaThingsUsedForServerActions";
 import { userSanitizer } from "@/utils/user";
+import { CycleUnit } from "@prisma/client";
 
 export const getAllUserCountSpaces = async () => {
   const { userName } = await userSanitizer();
@@ -25,9 +26,13 @@ export const getAllUserCountSpaces = async () => {
 export const createNewCountSpace = async ({
   name,
   slug,
+  defaultCycle,
+  defaultCycleUnit,
 }: {
   name: string;
   slug: string;
+  defaultCycle: number;
+  defaultCycleUnit: CycleUnit;
 }) => {
   const { userName } = await userSanitizer();
   if (userName === null) {
@@ -39,6 +44,8 @@ export const createNewCountSpace = async ({
       data: {
         name,
         slug,
+        defaultCycle,
+        defaultCycleUnit,
         owner: { connect: { name: userName } },
       },
     });
