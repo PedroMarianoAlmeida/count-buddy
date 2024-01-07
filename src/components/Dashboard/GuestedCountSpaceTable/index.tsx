@@ -1,5 +1,6 @@
 import TableHandler from "@/components/TableHandler";
 import { getAllUserCountSpacesGuests } from "@/server/actions/userCountSpaceGuest";
+import GuestCountSpaceActions from "./Actions";
 
 const GuestedCountSpaceTable = async () => {
   const countSpaceGuests = await getAllUserCountSpacesGuests();
@@ -10,7 +11,6 @@ const GuestedCountSpaceTable = async () => {
     return <div>No Count Spaces as Guest</div>;
 
   const data = countSpaceGuests.result;
-  console.log({ data });
 
   const tableHeader = [
     { key: "name", value: "Name" },
@@ -18,13 +18,11 @@ const GuestedCountSpaceTable = async () => {
     { key: "actions", value: "Actions" },
   ];
 
-  const tableRows = data.map(({ countSpace: { name, ownerName, id } }) => ({
+  const tableRows = data.map(({ countSpace: { name, ownerName, slug } }) => ({
     name,
     ownerName,
     actions: (
-      <div>
-        <button>Leave</button>
-      </div>
+      <GuestCountSpaceActions ownerName={ownerName} countSpaceSlug={slug} />
     ),
   }));
   return <TableHandler columnHeaders={tableHeader} rows={tableRows} />;
