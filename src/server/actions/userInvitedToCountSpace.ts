@@ -72,7 +72,6 @@ export const acceptInvitation = async ({
     });
 
     if (!countSpace.success) throw new Error(countSpace.message);
-    console.log("FOI");
     return { message: "Invitation accepted" };
   });
 };

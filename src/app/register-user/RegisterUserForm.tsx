@@ -72,7 +72,6 @@ const RegisterUserForm = () => {
     mutationFn: postNewUserName,
     onSuccess: () => {
       form.reset();
-      console.log("success");
       // useRouter is not working, so I'm using window.location.href
       window.location.href = "/";
     },

@@ -16,7 +16,6 @@ interface CategoriesTableProps {
 }
 
 const HistoryTable = ({ categories }: CategoriesTableProps) => {
-  console.log({ categories});
   const tableHeader = [
     { key: "category", value: "Category" },
     { key: "name", value: "Description" },
