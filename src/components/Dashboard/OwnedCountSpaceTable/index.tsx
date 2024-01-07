@@ -3,7 +3,6 @@ import TableHandler from "@/components/TableHandler";
 import { NewCountSpace } from "./NewCountSpace";
 import OwnedCountSpaceActions from "./OwnedCountSpaceActions";
 import { getAllUserCountSpaces } from "@/server/actions/countSpace";
-import { table } from "console";
 
 const OwnedCountSpaceTable = async () => {
   const countSpace = await getAllUserCountSpaces();
