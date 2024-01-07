@@ -1,7 +1,11 @@
 "use server";
 
+import { getInitialDataBasedOnCycle } from "@/utils/date";
 import { queryWrapper } from "@/utils/errorHandler";
-import { prisma } from "@/utils/prismaThingsUsedForServerActions";
+import {
+  prisma,
+  transactionWrapper,
+} from "@/utils/prismaThingsUsedForServerActions";
 import { userSanitizer } from "@/utils/user";
 import { CycleUnit } from "@prisma/client";
 
@@ -75,6 +79,60 @@ export const getOneCountSpace = async ({
             items: {
               orderBy: {
                 createdAt: "desc",
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!countSpace) throw new Error("CountSpace not found");
+    return countSpace;
+    // TODO: Check if the user logged is owner or guest of the countSpace
+  });
+};
+
+export const getCurrentCycleDataFromOneCountSpace = async ({
+  countSpaceSlug,
+  ownerName,
+}: {
+  countSpaceSlug: string;
+  ownerName: string;
+}) => {
+  return await transactionWrapper(async () => {
+    const countSpaceData = await prisma.countSpace.findUnique({
+      where: {
+        ownerName_slug: {
+          ownerName,
+          slug: countSpaceSlug,
+        },
+      },
+    });
+    if (!countSpaceData) throw new Error("CountSpace not found");
+    const { defaultCycle, defaultCycleUnit } = countSpaceData;
+    const startDate = getInitialDataBasedOnCycle({
+      cyclesPeriodicity: defaultCycle,
+      cycleUnit: defaultCycleUnit,
+      cycleAmount:0,
+    });
+
+    const countSpace = await prisma.countSpace.findUnique({
+      where: {
+        ownerName_slug: {
+          ownerName,
+          slug: countSpaceSlug,
+        },
+      },
+      include: {
+        categories: {
+          include: {
+            items: {
+              where: {
+                itemDate: {
+                  gte: startDate, // Greater than or equal to calculated start date
+                },
+              },
+              orderBy: {
+                itemDate: "desc",
               },
             },
           },
